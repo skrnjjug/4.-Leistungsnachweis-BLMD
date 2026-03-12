@@ -1,13 +1,16 @@
-import pandas as pd  # --- NEW CODE: add pandas to the imports ---
+import pandas as pd 
 import streamlit as st
 
 # --- NEW CODE: import and initialize data manager and login manager ---
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
 
-data_manager = DataManager(fs_protocol='webdav', fs_root_folder="BMLD_App_DB")
-login_manager = LoginManager(data_manager)
-login_manager.login_register()  # handles login navigation + stops if not logged in
+data_manager = DataManager(       # initialize data manager
+    fs_protocol='webdav',         # protocol for the filesystem, use webdav for switch drive
+    fs_root_folder="BMLD_App_DB"  # folder on switch drive where the data is stored
+    ) 
+login_manager = LoginManager(data_manager) # handles user login and registration
+login_manager.login_register()             # stops if not logged in
 # --- END OF NEW CODE ---
 
 # --- CODE UPDATE: load user data from data manager if not already present in session state --
