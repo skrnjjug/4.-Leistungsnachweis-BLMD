@@ -1,4 +1,5 @@
-# BMLD-Inf2-BMICalcV3
-Full blown example of BMI Calculator with user specific login
+# BarCalc
+Die Bar-Tagesabschluss App ist eine einfache Web-App, die Bar-Mitarbeitern hilft, den täglichen Kassenabschluss schnell und fehlerfrei durchzuführen. Ziel der App ist es, den Tagesabschluss zu vereinfachen, Fehler zu reduzieren und Zeit zu sparen.
 
-Link to the app: https://bmi-rechner-v3.streamlit.app
+skrnjlor@students.zhaw.ch
+vonfesop@students.zhaw.ch

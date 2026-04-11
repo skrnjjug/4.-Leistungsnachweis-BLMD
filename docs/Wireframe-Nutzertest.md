@@ -68,7 +68,7 @@ Marco Rossi, 35, Barchef
 
 ## 5. Auswertung (Test-Raster)
 
-### ✅ Was war gut?
+### Was war gut?
 
 * Klarer Aufbau der App
 * Logischer Ablauf
@@ -77,14 +77,14 @@ Marco Rossi, 35, Barchef
 
 ---
 
-### ❌ Was war schlecht?
+### Was war schlecht?
 
 * Begriff „Differenz“ nicht sofort verständlich
 * Zusammenhang zwischen Umsatz und Bargeld nicht direkt klar
 
 ---
 
-### 💡 Neue Ideen
+### Neue Ideen
 
 * Erklärung oder Tooltip bei „Differenz“
 * visuelle Hervorhebung (z. B. Symbol oder Farbe)
