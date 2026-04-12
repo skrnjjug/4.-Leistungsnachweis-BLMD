@@ -1,4 +1,4 @@
-# 👤 Persona – Bar-Tagesabschluss App
+# Persona – Bar-Tagesabschluss App
 
 ## Name
 Marco Rossi
