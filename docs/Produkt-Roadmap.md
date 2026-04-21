@@ -16,6 +16,7 @@ Die Priorisierung erfolgt nach der Wichtigkeit für die Grundfunktionalität der
 * Eingabeformular für Tagesabschluss (Name, Datum, Einnahmen)
 * Button „Berechnen“
 * Anzeige des Gesamtergebnisses (Total, Differenz)
+* Seperate Anzeige des Trinkgelds
 
 ---
 
@@ -40,6 +41,7 @@ Die Priorisierung erfolgt nach der Wichtigkeit für die Grundfunktionalität der
 * Anzeige aller gespeicherten Tagesabschlüsse
 * Darstellung von Datum und Umsatz
 * Möglichkeit, Einträge auszuwählen
+* Übersicht über Trinkgeld pro Tag
 
 ---
 
@@ -75,6 +77,7 @@ Die Priorisierung erfolgt nach der Wichtigkeit für die Grundfunktionalität der
 * Validierung der Eingaben (z. B. nur Zahlen zulassen)
 * Erweiterte Auswertungen (z. B. Diagramme)
 * Benutzerverwaltung (Login-Funktion)
+* Analyse des Trinkgelds (z.B. Verlauf über Zeit)
 
 ---
 
