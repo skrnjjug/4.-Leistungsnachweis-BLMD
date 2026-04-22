@@ -1,0 +1,5 @@
+name,datum,total,bar,barumsatz,endkasse,differenz,trinkgeld_total,mitarbeiter
+Sophie,2026-04-22,1450.0,453.0,501.0,801.0,48.0,48.0,"[{'name': 'Lorna', 'stunden': 9}, {'name': 'Sophie', 'stunden': 7}]"
+Sophie,2026-04-22,654.3000000000001,545.2,645.0,945.0,99.79999999999995,99.79999999999995,"[{'name': 'Lorna', 'stunden': 9}, {'name': 'Sophie', 'stunden': 8}]"
+Sophie,2026-04-22,833.35,543.95,604.2,904.2,60.25,60.25,"[{'name': 'Lorna', 'stunden': 9}, {'name': 'Sophie', 'stunden': 8}]"
+Sophie,2026-04-01,806.75,546.3,722.8,1022.8,176.5,176.5,"[{'name': 'Lorna', 'stunden': 9}, {'name': 'Sophie', 'stunden': 10}]"

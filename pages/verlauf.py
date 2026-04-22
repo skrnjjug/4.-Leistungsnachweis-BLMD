@@ -16,8 +16,13 @@ else:
             st.markdown("---")
 
             st.write(f"📅 Datum: {entry['datum']}")
-            st.write(f"💰 Einnahmen: {entry['total']:.2f} CHF")
-            st.write(f"💸 Trinkgeld: {entry['trinkgeld_total']:.2f} CHF")
+
+            # ✅ FIX: String → float
+            total = float(entry["total"])
+            trinkgeld = float(entry["trinkgeld_total"])
+
+            st.write(f"💰 Einnahmen: {total:.2f} CHF")
+            st.write(f"💸 Trinkgeld: {trinkgeld:.2f} CHF")
 
 # Abstand
 st.markdown("---")

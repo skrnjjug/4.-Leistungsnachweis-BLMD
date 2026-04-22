@@ -1,17 +1,22 @@
-import pandas as pd
-import streamlit as st
+import csv
+import os
 
-def init_data():
-    if "data" not in st.session_state:
-        st.session_state["data"] = pd.DataFrame()
+FILE = "data.csv"
 
-def add_entry(entry_df):
-    init_data()
-    st.session_state["data"] = pd.concat(
-        [st.session_state["data"], entry_df],
-        ignore_index=True
-    )
+def load_data():
+    if not os.path.exists(FILE):
+        return []
 
-def get_data():
-    init_data()
-    return st.session_state["data"]
+    with open(FILE, newline="") as f:
+        reader = csv.DictReader(f)
+        return list(reader)
+
+
+def save_data(data):
+    if not data:
+        return
+
+    with open(FILE, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=data[0].keys())
+        writer.writeheader()
+        writer.writerows(data)

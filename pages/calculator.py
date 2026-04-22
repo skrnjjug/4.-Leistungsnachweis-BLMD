@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import date
+from utils.data_manager import save_data   # ✅ NEU
 
 st.set_page_config(page_title="Calculator", layout="wide")
 
@@ -80,6 +81,21 @@ twint = col5.number_input("📱 TWINT", 0.0)
 # =========================
 st.markdown('<div class="subtitle">💵 Kasse</div>', unsafe_allow_html=True)
 endkasse = st.number_input("Gezähltes Bargeld (Endkasse)", 0.0)
+
+# =========================
+# 💸 AUTO TRINKGELD
+# =========================
+barumsatz_preview = endkasse - STARTKASSE
+differenz_preview = barumsatz_preview - bar
+trinkgeld_preview = max(differenz_preview, 0)
+
+st.markdown('<div class="subtitle">💸 Trinkgeld</div>', unsafe_allow_html=True)
+
+st.markdown(f"""
+<div class="card">
+<div class="highlight">{trinkgeld_preview:.2f} CHF</div>
+</div>
+""", unsafe_allow_html=True)
 
 # =========================
 # MITARBEITER
@@ -191,10 +207,18 @@ if st.session_state.show_result:
 
     with col2:
         if st.button("💾 Speichern", use_container_width=True):
+
             if "history" not in st.session_state:
                 st.session_state.history = []
 
+            # ✅ Datum fix für CSV
+            data["datum"] = str(data["datum"])
+
             st.session_state.history.append(data)
+
+            # ✅ WICHTIG: dauerhaft speichern
+            save_data(st.session_state.history)
+
             st.session_state.show_result = False
             st.success("Gespeichert!")
             st.switch_page("app.py")
