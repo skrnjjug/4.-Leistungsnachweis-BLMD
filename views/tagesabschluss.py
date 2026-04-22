@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 from datetime import date, datetime
 
-st.set_page_config(page_title="Tagesabschluss berechnen", layout="wide")
-
 STARTKASSE = 300
 
 # =========================
@@ -214,7 +212,8 @@ if st.session_state.show_result:
     with col2:
         if st.button("💾 Speichern", use_container_width=True):
 
-            # für CSV / DataFrame vorbereiten
+            data = st.session_state.result
+
             eintrag = {
                 "timestamp": data["timestamp"],
                 "name": data["name"],
@@ -231,14 +230,16 @@ if st.session_state.show_result:
 
             neuer_eintrag = pd.DataFrame([eintrag])
 
-            st.session_state.data_df = pd.concat(
-                [st.session_state.data_df, neuer_eintrag],
+            st.session_state["data_df"] = pd.concat(
+                [st.session_state["data_df"], neuer_eintrag],
                 ignore_index=True
             )
 
-            # dauerhaft speichern über DataManager
             data_manager = st.session_state["data_manager"]
-            data_manager.save_user_data(st.session_state.data_df, "data.csv")
+            data_manager.save_user_data(
+                st.session_state["data_df"],
+                "data.csv"
+            )
 
             st.session_state.show_result = False
             st.success("Gespeichert!")
