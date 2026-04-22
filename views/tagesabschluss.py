@@ -1,13 +1,13 @@
 import streamlit as st
-from datetime import date
-from utils.data_manager import save_data   # ✅ NEU
+import pandas as pd
+from datetime import date, datetime
 
 st.set_page_config(page_title="Tagesabschluss berechnen", layout="wide")
 
 STARTKASSE = 300
 
 # =========================
-# 🎨 STYLE
+# STYLE
 # =========================
 st.markdown("""
 <style>
@@ -52,6 +52,9 @@ if "mitarbeiter" not in st.session_state:
 if "show_result" not in st.session_state:
     st.session_state.show_result = False
 
+if "data_df" not in st.session_state:
+    st.session_state.data_df = pd.DataFrame()
+
 # =========================
 # HEADER
 # =========================
@@ -83,7 +86,7 @@ st.markdown('<div class="subtitle">💵 Kasse</div>', unsafe_allow_html=True)
 endkasse = st.number_input("Gezähltes Bargeld (Endkasse)", 0.0)
 
 # =========================
-# 💸 AUTO TRINKGELD
+# AUTO TRINKGELD
 # =========================
 barumsatz_preview = endkasse - STARTKASSE
 differenz_preview = barumsatz_preview - bar
@@ -115,13 +118,13 @@ for i, ma in enumerate(st.session_state.mitarbeiter):
 st.markdown("---")
 
 # =========================
-# BUTTONS (WICHTIG)
+# BUTTONS
 # =========================
 colA, colB = st.columns(2)
 
 with colA:
     if st.button("🔙 Zurück", use_container_width=True, type="secondary"):
-        st.switch_page("app.py")
+        st.switch_page("views/home.py")
 
 with colB:
     if st.button("➡️ Berechnen", use_container_width=True, type="secondary"):
@@ -132,10 +135,13 @@ with colB:
         trinkgeld_total = max(differenz, 0)
 
         st.session_state.result = {
+            "timestamp": datetime.now(),
             "name": name,
             "datum": datum,
             "total": total,
             "bar": bar,
+            "karte": karte,
+            "twint": twint,
             "barumsatz": barumsatz,
             "endkasse": endkasse,
             "differenz": differenz,
@@ -208,17 +214,32 @@ if st.session_state.show_result:
     with col2:
         if st.button("💾 Speichern", use_container_width=True):
 
-            if "history" not in st.session_state:
-                st.session_state.history = []
+            # für CSV / DataFrame vorbereiten
+            eintrag = {
+                "timestamp": data["timestamp"],
+                "name": data["name"],
+                "datum": str(data["datum"]),
+                "bar": data["bar"],
+                "karte": data["karte"],
+                "twint": data["twint"],
+                "total": data["total"],
+                "endkasse": data["endkasse"],
+                "barumsatz": data["barumsatz"],
+                "differenz": data["differenz"],
+                "trinkgeld_total": data["trinkgeld_total"]
+            }
 
-            # ✅ Datum fix für CSV
-            data["datum"] = str(data["datum"])
+            neuer_eintrag = pd.DataFrame([eintrag])
 
-            st.session_state.history.append(data)
+            st.session_state.data_df = pd.concat(
+                [st.session_state.data_df, neuer_eintrag],
+                ignore_index=True
+            )
 
-            # ✅ WICHTIG: dauerhaft speichern
-            save_data(st.session_state.history)
+            # dauerhaft speichern über DataManager
+            data_manager = st.session_state["data_manager"]
+            data_manager.save_user_data(st.session_state.data_df, "data.csv")
 
             st.session_state.show_result = False
             st.success("Gespeichert!")
-            st.switch_page("app.py")
+            st.switch_page("views/home.py")
