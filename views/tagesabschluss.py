@@ -19,24 +19,47 @@ st.markdown("""
     border-radius: 16px;
     border: 1px solid #e2e8f0;
     margin-bottom: 15px;
+    color: #111827;
 }
 
 .title {
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 10px;
+    color: white;
 }
 
 .subtitle {
     font-size: 18px;
     font-weight: 600;
     margin-top: 20px;
+    margin-bottom: 8px;
+    color: white;
 }
 
 .highlight {
     font-size: 22px;
     font-weight: bold;
     color: #16a34a;
+}
+
+.card-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.card-subtext {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.card-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 6px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -94,7 +117,8 @@ st.markdown('<div class="subtitle">💸 Trinkgeld</div>', unsafe_allow_html=True
 
 st.markdown(f"""
 <div class="card">
-<div class="highlight">{trinkgeld_preview:.2f} CHF</div>
+    <div class="card-label">Berechnetes Trinkgeld</div>
+    <div class="highlight">{trinkgeld_preview:.2f} CHF</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -162,22 +186,25 @@ if st.session_state.show_result:
 
     c1.markdown(f"""
     <div class="card">
-    💰 Einnahmen<br>
-    <div class="highlight">{data['total']:.2f} CHF</div>
+        <div class="card-label">💰 Einnahmen gesamt</div>
+        <div class="highlight">{data['total']:.2f} CHF</div>
+        <div class="card-subtext">Bar + Karte + TWINT</div>
     </div>
     """, unsafe_allow_html=True)
 
     c2.markdown(f"""
     <div class="card">
-    📉 Differenz<br>
-    <div class="highlight">{data['differenz']:.2f} CHF</div>
+        <div class="card-label">📉 Differenz</div>
+        <div class="highlight">{data['differenz']:.2f} CHF</div>
+        <div class="card-subtext">Barumsatz minus erwartete Bareinnahmen</div>
     </div>
     """, unsafe_allow_html=True)
 
     c3.markdown(f"""
     <div class="card">
-    💸 Trinkgeld<br>
-    <div class="highlight">{data['trinkgeld_total']:.2f} CHF</div>
+        <div class="card-label">💸 Trinkgeld total</div>
+        <div class="highlight">{data['trinkgeld_total']:.2f} CHF</div>
+        <div class="card-subtext">Automatisch aus der Differenz berechnet</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -186,16 +213,17 @@ if st.session_state.show_result:
     mitarbeiter = data["mitarbeiter"]
     total_stunden = sum(ma["stunden"] for ma in mitarbeiter)
 
-    if total_stunden > 0:
+    if total_stunden > 0 and len(mitarbeiter) > 0:
         for ma in mitarbeiter:
             anteil = ma["stunden"] / total_stunden
             betrag = anteil * data["trinkgeld_total"]
 
             st.markdown(f"""
             <div class="card">
-            <strong>{ma['name']}</strong><br>
-            {ma['stunden']} Stunden<br>
-            💸 <span class="highlight">{betrag:.2f} CHF</span>
+                <div class="card-name">👤 {ma['name'] if ma['name'] else 'Unbenannter Mitarbeiter'}</div>
+                <div class="card-subtext">{ma['stunden']} Stunden gearbeitet</div>
+                <div class="card-label" style="margin-top:10px;">Ausbezahltes Trinkgeld</div>
+                <div class="highlight">💸 {betrag:.2f} CHF</div>
             </div>
             """, unsafe_allow_html=True)
     else:
