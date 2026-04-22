@@ -1,7 +1,7 @@
 import csv
 import os
 
-FILE = "data.csv"
+FILE = "data.csv" 
 
 def load_data():
     if not os.path.exists(FILE):
