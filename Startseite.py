@@ -1,14 +1,8 @@
 import streamlit as st
 from utils.data_manager import load_data
 
-st.set_page_config(
-    page_title="Startseite | BarCalc",
-    page_icon="🍸",
-    layout="wide"
-)
-
 # =========================
-# 🧠 STATE INIT
+# STATE INIT
 # =========================
 if "history" not in st.session_state:
     st.session_state.history = load_data()
@@ -17,7 +11,7 @@ if "mitarbeiter" not in st.session_state:
     st.session_state.mitarbeiter = []
 
 # =========================
-# 🎨 STYLE
+# STYLE
 # =========================
 st.markdown("""
 <style>
@@ -49,7 +43,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
-# 🏠 HEADER
+# HEADER
 # =========================
 st.markdown("""
 <div style="
@@ -66,7 +60,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
-# NAVIGATION
+# NAVIGATION CARDS
 # =========================
 col1, col2 = st.columns(2)
 
@@ -81,8 +75,7 @@ with col1:
 
     if st.button("Starten", use_container_width=True):
         st.session_state.mitarbeiter = []
-        st.switch_page("pages/calculator.py")
-
+        st.switch_page("views/tagesabschluss.py")
 
 with col2:
     st.markdown("""
@@ -94,4 +87,4 @@ with col2:
     """, unsafe_allow_html=True)
 
     if st.button("Öffnen", use_container_width=True):
-        st.switch_page("pages/verlauf.py")
+        st.switch_page("views/verlauf.py")
