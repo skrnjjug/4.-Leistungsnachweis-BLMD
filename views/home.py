@@ -1,17 +1,16 @@
 import streamlit as st
-from utils.data_manager import load_data
 
 # =========================
-# STATE INIT
+# 🧠 STATE INIT
 # =========================
 if "history" not in st.session_state:
-    st.session_state.history = load_data()
+    st.session_state.history = []
 
 if "mitarbeiter" not in st.session_state:
     st.session_state.mitarbeiter = []
 
 # =========================
-# STYLE
+# 🎨 STYLE
 # =========================
 st.markdown("""
 <style>
@@ -25,7 +24,12 @@ st.markdown("""
     border-radius: 16px;
     border: 1px solid #e2e8f0;
     text-align: center;
-    height: 150px;
+    height: 160px;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.03);
 }
 
 .card-title {
@@ -43,7 +47,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
-# HEADER
+# 🏠 HEADER
 # =========================
 st.markdown("""
 <div style="
@@ -60,7 +64,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
-# NAVIGATION CARDS
+# 📊 NAVIGATION CARDS
 # =========================
 col1, col2 = st.columns(2)
 
@@ -77,6 +81,7 @@ with col1:
         st.session_state.mitarbeiter = []
         st.switch_page("views/tagesabschluss.py")
 
+
 with col2:
     st.markdown("""
     <div class="card">
@@ -88,3 +93,9 @@ with col2:
 
     if st.button("Öffnen", use_container_width=True):
         st.switch_page("views/verlauf.py")
+
+# =========================
+# 💡 FOOTER HINWEIS
+# =========================
+st.markdown("---")
+st.caption("💡 Tipp: Starte mit dem Tagesabschluss und teste deine App.")
