@@ -1,32 +1,41 @@
 import streamlit as st
+import pandas as pd
 
-st.set_page_config(page_title="Verlauf", layout="wide")
+st.markdown("## 📊 Verlauf")
 
-st.title("📊 Verlauf")
+st.caption("Hier siehst du alle gespeicherten Tagesabschlüsse.")
 
-# Daten holen
-history = st.session_state.get("history", [])
+# Falls data_df noch nicht im session state vorhanden ist, Daten laden
+if "data_df" not in st.session_state:
+    data_manager = st.session_state["data_manager"]
+    st.session_state["data_df"] = data_manager.load_user_data(
+        "data.csv",
+        initial_value=pd.DataFrame(),
+        parse_dates=["timestamp"]
+    )
 
-if not history:
-    st.info("Noch keine Einträge vorhanden.")
+data_df = st.session_state["data_df"]
+
+if data_df.empty:
+    st.info("Noch keine gespeicherten Einträge vorhanden.")
 else:
-    for entry in reversed(history):
+    st.markdown("### Gespeicherte Tagesabschlüsse")
+    st.dataframe(data_df, use_container_width=True)
 
-        with st.container():
-            st.markdown("---")
+    # Optional: wichtigste Kennzahlen oben anzeigen
+    col1, col2, col3 = st.columns(3)
 
-            st.write(f"📅 Datum: {entry['datum']}")
+    with col1:
+        st.metric("Einträge", len(data_df))
 
-            # ✅ FIX: String → float
-            total = float(entry["total"])
-            trinkgeld = float(entry["trinkgeld_total"])
+    with col2:
+        st.metric("Gesamteinnahmen", f"{data_df['total'].sum():.2f} CHF")
 
-            st.write(f"💰 Einnahmen: {total:.2f} CHF")
-            st.write(f"💸 Trinkgeld: {trinkgeld:.2f} CHF")
+    with col3:
+        if "trinkgeld_total" in data_df.columns:
+            st.metric("Gesamtes Trinkgeld", f"{data_df['trinkgeld_total'].sum():.2f} CHF")
 
-# Abstand
 st.markdown("---")
 
-# Zurück Button unten
 if st.button("🔙 Zurück zur Startseite", use_container_width=True):
-    st.switch_page("app.py")
+    st.switch_page("views/home.py")
