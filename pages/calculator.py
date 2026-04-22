@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import date
 from utils.data_manager import save_data   # ✅ NEU
 
-st.set_page_config(page_title="Calculator", layout="wide")
+st.set_page_config(page_title="Tagesabschluss berechnen", layout="wide")
 
 STARTKASSE = 300
 
