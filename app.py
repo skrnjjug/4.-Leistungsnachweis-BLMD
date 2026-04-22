@@ -4,14 +4,20 @@ import streamlit as st
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
 
+# =========================
+# CONFIG
+# =========================
 st.set_page_config(
     page_title="BarCalc",
     page_icon="🍸",
     layout="wide"
 )
 
+# =========================
+# DATA + LOGIN
+# =========================
 data_manager = DataManager(
-    fs_protocol='webdav',
+    fs_protocol="webdav",
     fs_root_folder="app_data"
 )
 
@@ -27,7 +33,9 @@ if "data_df" not in st.session_state:
 
 st.session_state["data_manager"] = data_manager
 
-# Navigation
+# =========================
+# NAVIGATION
+# =========================
 pg_home = st.Page(
     "views/home.py",
     title="Startseite",

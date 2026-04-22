@@ -1,7 +1,7 @@
 import streamlit as st
 
 # =========================
-# 🧠 STATE INIT
+# STATE INIT
 # =========================
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -10,7 +10,7 @@ if "mitarbeiter" not in st.session_state:
     st.session_state.mitarbeiter = []
 
 # =========================
-# 🎨 STYLE
+# STYLE
 # =========================
 st.markdown("""
 <style>
@@ -47,7 +47,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
-# 🏠 HEADER
+# HEADER
 # =========================
 st.markdown("""
 <div style="
@@ -64,7 +64,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
-# 📊 NAVIGATION CARDS
+# NAVIGATION CARDS
 # =========================
 col1, col2 = st.columns(2)
 
@@ -81,7 +81,6 @@ with col1:
         st.session_state.mitarbeiter = []
         st.switch_page("views/tagesabschluss.py")
 
-
 with col2:
     st.markdown("""
     <div class="card">
@@ -95,7 +94,7 @@ with col2:
         st.switch_page("views/verlauf.py")
 
 # =========================
-# 💡 FOOTER HINWEIS
+# FOOTER
 # =========================
 st.markdown("---")
 st.caption("💡 Tipp: Starte mit dem Tagesabschluss und teste deine App.")
