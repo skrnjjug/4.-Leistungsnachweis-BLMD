@@ -84,6 +84,7 @@ else:
         col for col in [
             "datum",
             "name",
+            "startkasse",
             "bar",
             "karte",
             "twint",
@@ -123,6 +124,7 @@ else:
         <div class="detail-title">Details zum Tagesabschluss</div>
         <p><span class="detail-label">Datum:</span> {eintrag.get("datum", "-")}</p>
         <p><span class="detail-label">Name:</span> {eintrag.get("name", "-")}</p>
+        <p><span class="detail-label">Kassenstock:</span> {float(eintrag.get("startkasse", 0)):.2f} CHF</p>
         <p><span class="detail-label">Bar:</span> {float(eintrag.get("bar", 0)):.2f} CHF</p>
         <p><span class="detail-label">Karte:</span> {float(eintrag.get("karte", 0)):.2f} CHF</p>
         <p><span class="detail-label">TWINT:</span> {float(eintrag.get("twint", 0)):.2f} CHF</p>
@@ -157,6 +159,33 @@ else:
             st.warning("Trinkgeld-Verteilung konnte nicht gelesen werden.")
     else:
         st.info("Keine Trinkgeld-Verteilung für diesen Eintrag vorhanden.")
+
+    st.markdown("---")
+    st.markdown("### 🗑️ Abschluss löschen")
+
+    st.warning("Achtung: Wenn du diesen Abschluss löschst, wird er dauerhaft aus dem Verlauf entfernt.")
+
+    delete_confirm = st.checkbox(
+        "Ich möchte diesen Abschluss wirklich löschen.",
+        key=f"delete_confirm_{selected_index}"
+    )
+
+    if st.button("🗑️ Ausgewählten Abschluss löschen", use_container_width=True, type="primary"):
+        if delete_confirm:
+            data_df = data_df.drop(index=selected_index).reset_index(drop=True)
+
+            st.session_state["data_df"] = data_df
+
+            data_manager = st.session_state["data_manager"]
+            data_manager.save_user_data(
+                st.session_state["data_df"],
+                "data.csv"
+            )
+
+            st.success("Abschluss wurde gelöscht.")
+            st.rerun()
+        else:
+            st.error("Bitte bestätige zuerst, dass du diesen Abschluss löschen möchtest.")
 
 st.markdown("---")
 
