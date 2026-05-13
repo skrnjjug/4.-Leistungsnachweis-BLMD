@@ -3,8 +3,6 @@ import pandas as pd
 import json
 from datetime import date, datetime
 
-STARTKASSE = 300
-
 # =========================
 # STYLE
 # =========================
@@ -92,25 +90,44 @@ name = col1.text_input("Name")
 datum = col2.date_input("Datum", value=date.today())
 
 # =========================
+# KASSENSTOCK
+# =========================
+st.markdown('<div class="subtitle">💵 Kassenstock</div>', unsafe_allow_html=True)
+
+startkasse = st.number_input(
+    "Fixer Kassenstock / Startkasse (CHF)",
+    min_value=0.0,
+    value=300.0,
+    step=10.0,
+    help="Standardmässig bleiben 300 CHF in der Kasse. Dieser Betrag wird vom gezählten Bargeld abgezogen."
+)
+
+st.info(f"Für diese Abrechnung wird ein Kassenstock von **{startkasse:.2f} CHF** vom gezählten Bargeld abgezogen.")
+
+# =========================
 # EINNAHMEN
 # =========================
 st.markdown('<div class="subtitle">💰 Einnahmen</div>', unsafe_allow_html=True)
 col3, col4, col5 = st.columns(3)
 
-bar = col3.number_input("💵 Bar", 0.0)
+bar = col3.number_input("💵 Erwartete Bar-Einnahmen", 0.0)
 karte = col4.number_input("💳 Karte", 0.0)
 twint = col5.number_input("📱 TWINT", 0.0)
 
 # =========================
 # KASSE
 # =========================
-st.markdown('<div class="subtitle">💵 Kasse</div>', unsafe_allow_html=True)
-endkasse = st.number_input("Gezähltes Bargeld (Endkasse)", 0.0)
+st.markdown('<div class="subtitle">💵 Endkasse</div>', unsafe_allow_html=True)
+endkasse = st.number_input(
+    "Gezähltes Bargeld in der Kasse (Endkasse)",
+    0.0,
+    help="Hier wird der gesamte gezählte Bargeldbetrag am Ende des Tages eingetragen."
+)
 
 # =========================
 # AUTO TRINKGELD
 # =========================
-barumsatz_preview = endkasse - STARTKASSE
+barumsatz_preview = endkasse - startkasse
 differenz_preview = barumsatz_preview - bar
 trinkgeld_preview = max(differenz_preview, 0)
 
@@ -120,6 +137,9 @@ st.markdown(f"""
 <div class="card">
     <div class="card-label">Berechnetes Trinkgeld</div>
     <div class="highlight">{trinkgeld_preview:.2f} CHF</div>
+    <div class="card-subtext">
+        Berechnung: Endkasse - Kassenstock - erwartete Bar-Einnahmen
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -153,7 +173,7 @@ with colB:
     if st.button("➡️ Berechnen", use_container_width=True, type="secondary"):
 
         total = bar + karte + twint
-        barumsatz = endkasse - STARTKASSE
+        barumsatz = endkasse - startkasse
         differenz = barumsatz - bar
         trinkgeld_total = max(differenz, 0)
 
@@ -161,6 +181,7 @@ with colB:
             "timestamp": datetime.now(),
             "name": name,
             "datum": datum,
+            "startkasse": startkasse,
             "total": total,
             "bar": bar,
             "karte": karte,
@@ -197,7 +218,7 @@ if st.session_state.show_result:
     <div class="card">
         <div class="card-label">📉 Differenz</div>
         <div class="highlight">{data['differenz']:.2f} CHF</div>
-        <div class="card-subtext">Barumsatz minus erwartete Bareinnahmen</div>
+        <div class="card-subtext">Endkasse - Kassenstock - erwartete Bar-Einnahmen</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -205,7 +226,23 @@ if st.session_state.show_result:
     <div class="card">
         <div class="card-label">💸 Trinkgeld total</div>
         <div class="highlight">{data['trinkgeld_total']:.2f} CHF</div>
-        <div class="card-subtext">Automatisch aus der Differenz berechnet</div>
+        <div class="card-subtext">Automatisch aus positiver Differenz berechnet</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("### 💵 Kassenübersicht")
+
+    st.markdown(f"""
+    <div class="card">
+        <div class="card-label">Kassenstock</div>
+        <div class="highlight">{data['startkasse']:.2f} CHF</div>
+        <div class="card-subtext">Dieser Betrag bleibt fix in der Kasse und wurde vom gezählten Bargeld abgezogen.</div>
+        <br>
+        <div class="card-label">Gezählte Endkasse</div>
+        <div class="highlight">{data['endkasse']:.2f} CHF</div>
+        <br>
+        <div class="card-label">Berechneter Barumsatz</div>
+        <div class="highlight">{data['barumsatz']:.2f} CHF</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -263,6 +300,7 @@ if st.session_state.show_result:
                 "timestamp": data["timestamp"],
                 "name": data["name"],
                 "datum": str(data["datum"]),
+                "startkasse": data["startkasse"],
                 "bar": data["bar"],
                 "karte": data["karte"],
                 "twint": data["twint"],
