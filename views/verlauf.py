@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import json
 
 st.markdown("## 📊 Verlauf")
 st.caption("Hier siehst du alle gespeicherten Tagesabschlüsse.")
@@ -41,6 +42,12 @@ st.markdown("""
 .detail-label {
     font-weight: 600;
     color: #374151;
+}
+
+.detail-highlight {
+    font-size: 20px;
+    font-weight: bold;
+    color: #16a34a;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -126,6 +133,30 @@ else:
         <p><span class="detail-label">Trinkgeld:</span> {float(eintrag.get("trinkgeld_total", 0)):.2f} CHF</p>
     </div>
     """, unsafe_allow_html=True)
+
+    st.markdown("### 👥 Trinkgeld-Verteilung")
+
+    if "trinkgeld_verteilung" in eintrag and pd.notna(eintrag["trinkgeld_verteilung"]):
+        try:
+            verteilung = json.loads(eintrag["trinkgeld_verteilung"])
+
+            if len(verteilung) > 0:
+                for person in verteilung:
+                    st.markdown(f"""
+                    <div class="detail-card">
+                        <p><span class="detail-label">Mitarbeiter:</span> {person.get("name", "-")}</p>
+                        <p><span class="detail-label">Stunden:</span> {person.get("stunden", 0)}</p>
+                        <p><span class="detail-label">Trinkgeld-Anteil:</span></p>
+                        <div class="detail-highlight">{float(person.get("betrag", 0)):.2f} CHF</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            else:
+                st.info("Für diesen Eintrag wurde keine Trinkgeld-Verteilung gespeichert.")
+
+        except Exception:
+            st.warning("Trinkgeld-Verteilung konnte nicht gelesen werden.")
+    else:
+        st.info("Keine Trinkgeld-Verteilung für diesen Eintrag vorhanden.")
 
 st.markdown("---")
 

@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import json
 from datetime import date, datetime
 
 STARTKASSE = 300
@@ -174,7 +175,7 @@ with colB:
         st.session_state.show_result = True
 
 # =========================
-# ERGEBNIS (PREVIEW)
+# ERGEBNIS
 # =========================
 if st.session_state.show_result:
 
@@ -242,6 +243,22 @@ if st.session_state.show_result:
 
             data = st.session_state.result
 
+            mitarbeiter = data["mitarbeiter"]
+            total_stunden = sum(ma["stunden"] for ma in mitarbeiter)
+
+            trinkgeld_verteilung = []
+
+            if total_stunden > 0:
+                for ma in mitarbeiter:
+                    anteil = ma["stunden"] / total_stunden
+                    betrag = anteil * data["trinkgeld_total"]
+
+                    trinkgeld_verteilung.append({
+                        "name": ma["name"] if ma["name"] else "Unbenannter Mitarbeiter",
+                        "stunden": ma["stunden"],
+                        "betrag": round(betrag, 2)
+                    })
+
             eintrag = {
                 "timestamp": data["timestamp"],
                 "name": data["name"],
@@ -253,7 +270,8 @@ if st.session_state.show_result:
                 "endkasse": data["endkasse"],
                 "barumsatz": data["barumsatz"],
                 "differenz": data["differenz"],
-                "trinkgeld_total": data["trinkgeld_total"]
+                "trinkgeld_total": data["trinkgeld_total"],
+                "trinkgeld_verteilung": json.dumps(trinkgeld_verteilung, ensure_ascii=False)
             }
 
             neuer_eintrag = pd.DataFrame([eintrag])
